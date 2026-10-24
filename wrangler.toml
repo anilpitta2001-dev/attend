@@ -1,0 +1,8 @@
+name = "attendance-webhook-controller"
+main = "failover-worker.js"
+compatibility_date = "2026-10-22"
+
+# Create a KV namespace in Cloudflare and replace the placeholder with its ID.
+[[kv_namespaces]]
+binding = "BOT_CONFIG"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
