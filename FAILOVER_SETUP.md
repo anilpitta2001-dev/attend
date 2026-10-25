@@ -7,7 +7,7 @@ This is an addition to the existing Attendance Checker repository. It does **not
 There are two different jobs:
 
 1. The existing `index.php` proxy (`PROXY_URL`/`PROXY_KEY`) sends the scraper's outgoing requests to the college portal through a Cloudflare Worker.
-2. The new `failover-worker.js` receives Telegram webhooks at one stable URL and forwards each update to Render A or Render B. If the selected Render service is unreachable or returns a 5xx error, it tries the other service. It stores the selected server in Cloudflare KV.
+2. The new `failover-worker.js` receives Telegram webhooks at one stable URL and forwards each update to Render A or Render B. If the selected Render service is unreachable, returns a 5xx error, or serves a recognized Render suspension page, it tries the other service. It stores the selected server in Cloudflare KV.
 
 Cloudflare is the small always-available traffic controller; it is not the attendance scraper or database.
 
@@ -17,7 +17,7 @@ Cloudflare is the small always-available traffic controller; it is not the atten
 - Both Render services run the same PHP repository and use the same Supabase `DATABASE_URL`.
 - Keep the existing bot tokens and college portal credentials out of Git.
 - Both PHP webhook endpoints now require `BACKEND_PROXY_SECRET` as well as the Telegram webhook secret. Configure these before switching Telegram's webhooks, or requests will be rejected.
-- The Worker auto-switches when a webhook request encounters a transport failure or HTTP 5xx. `/serverstatus` probes both deployments. `/switchserver A` and `/switchserver B` manually select a healthy deployment.
+- The Worker auto-switches when a webhook request encounters a transport failure, HTTP 5xx, or a recognized Render suspension page. Its health probe also rejects generic HTML responses. `/serverstatus` probes both deployments. `/switchserver A` and `/switchserver B` manually select a healthy deployment.
 - Manual switch commands must be sent to the existing Admin Bot in a private chat by the configured `ADMIN_TELEGRAM_ID`. Other admin bot commands continue to run in `admin_bot.php`.
 
 ## 1. Deploy the same repository twice on Render

@@ -37,7 +37,17 @@ async function probe(env, server) {
       signal: AbortSignal.timeout(4000),
       redirect: "manual",
     });
-    return { server, healthy: r.status >= 200 && r.status < 300, status: r.status };
+    const contentType = (r.headers.get("content-type") || "").toLowerCase();
+    const body = (await r.text()).slice(0, 2000).toLowerCase();
+    const looksSuspended = body.includes("this service has been suspended") ||
+      body.includes("service suspended") || body.includes("free usage limit reached");
+    const looksLikeEndpoint = body.includes("bits attendance telegram user bot is running.") ||
+      (contentType.startsWith("text/plain") && body.includes("attendance telegram"));
+    const healthy = r.status >= 200 && r.status < 300 && !looksSuspended &&
+      !contentType.includes("text/html") && looksLikeEndpoint;
+    return { server, healthy, status: r.status,
+      reason: healthy ? undefined : (looksSuspended ? "Render suspension page detected" :
+        (contentType.includes("text/html") ? "Unexpected HTML response" : "Attendance endpoint health check failed")) };
   } catch {
     return { server, healthy: false, reason: "unreachable or timed out" };
   }
@@ -81,13 +91,20 @@ async function proxyToBackend(request, env, path) {
         redirect: "manual",
       });
 
-      // Only retry server-side failures. A 4xx usually means the request is invalid
-      // or its secret is wrong, so trying another server won't fix it.
+      // Render may serve its suspension page with HTTP 200. Detect that HTML
+      // response and try the other backend instead of forwarding it to Telegram.
+      const contentType = (response.headers.get("content-type") || "").toLowerCase();
       if (response.status >= 500 && response.status <= 599) continue;
-
-      if (server !== configured) {
-        await env.BOT_CONFIG.put(ACTIVE_KEY, server);
+      if (response.status >= 200 && response.status < 300 && contentType.includes("text/html")) {
+        const body = await response.text();
+        const lower = body.slice(0, 5000).toLowerCase();
+        if (lower.includes("this service has been suspended") ||
+            lower.includes("service suspended") || lower.includes("free usage limit reached")) {
+          continue;
+        }
+        return new Response(body, { status: response.status, headers: response.headers });
       }
+      if (server !== configured) await env.BOT_CONFIG.put(ACTIVE_KEY, server);
       return response;
     } catch {
       // Connection failure/timeout: try the other deployment.
