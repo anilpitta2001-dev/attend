@@ -24,7 +24,6 @@ date_default_timezone_set('Asia/Kolkata');
 
 define('ADMIN_BOT_TOKEN', trim(getenv('ADMIN_BOT_TOKEN') ?: ''));
 define('ADMIN_WEBHOOK_SECRET', trim(getenv('ADMIN_WEBHOOK_SECRET') ?: ''));
-define('BACKEND_PROXY_SECRET', trim(getenv('BACKEND_PROXY_SECRET') ?: ''));
 define('PUBLIC_BOT_TOKEN', trim(getenv('TELEGRAM_BOT_TOKEN') ?: ''));
 
 function db(): ?PDO { require_once __DIR__ . '/db.php'; return attendance_db(); }
@@ -575,14 +574,13 @@ function handle_admin_message($message) {
 
 /* Admin webhook security */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Webhook POSTs must arrive through the trusted controller and carry Telegram's secret.
-    $proxyReceived = $_SERVER['HTTP_X_ATTENDANCE_PROXY_SECRET'] ?? '';
-    $telegramReceived = $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? '';
-    if (BACKEND_PROXY_SECRET === '' || !hash_equals(BACKEND_PROXY_SECRET, $proxyReceived) ||
-        ADMIN_WEBHOOK_SECRET === '' || !hash_equals(ADMIN_WEBHOOK_SECRET, $telegramReceived)) {
-        http_response_code(403);
-        echo 'Forbidden';
-        exit;
+    if (ADMIN_WEBHOOK_SECRET !== '') {
+        $received = $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? '';
+        if (!hash_equals(ADMIN_WEBHOOK_SECRET, $received)) {
+            http_response_code(403);
+            echo 'Forbidden';
+            exit;
+        }
     }
 
     $raw = file_get_contents('php://input');

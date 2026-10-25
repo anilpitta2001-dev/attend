@@ -6,7 +6,7 @@ define('CRON_SECRET', getenv('CRON_SECRET') ?: '');
 define('TELEGRAM_BOT_TOKEN', getenv('TELEGRAM_BOT_TOKEN') ?: '');
 define('TELEGRAM_CHAT_ID', getenv('TELEGRAM_CHAT_ID') ?: '');
 define('ATTENDANCE_ROLL', strtoupper(trim(getenv('ATTENDANCE_ROLL') ?: '')));
-define('ATTENDANCE_API_URL', getenv('ATTENDANCE_API_URL') ?: 'https://attendancechecker-o41l.onrender.com/index.php?api=attendance');
+define('ATTENDANCE_API_URL', getenv('ATTENDANCE_API_URL') ?: 'https://attend-ctn4.onrender.com/index.php?api=attendance');
 define('ATTENDANCE_API_KEY', getenv('ATTENDANCE_API_KEY') ?: '');
 
 $key = $_GET['key'] ?? ($_SERVER['HTTP_X_CRON_KEY'] ?? '');

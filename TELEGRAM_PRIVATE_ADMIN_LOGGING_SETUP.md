@@ -43,7 +43,7 @@ Do not claim that no data is collected when logging is enabled.
 TELEGRAM_BOT_TOKEN=
 TELEGRAM_WEBHOOK_SECRET=
 
-ATTENDANCE_API_URL=https://attendancechecker-o41l.onrender.com/index.php?api=attendance
+ATTENDANCE_API_URL=https://attend-ctn4.onrender.com/index.php?api=attendance
 ATTENDANCE_API_KEY=
 
 ADMIN_BOT_TOKEN=
@@ -59,7 +59,7 @@ ADMIN_CHAT_ID=
 5. Do NOT give the admin logger bot token to users.
 6. Keep both tokens in Render Environment Variables, never in GitHub source code.
 7. The existing attendance webhook URL can remain:
-   `https://attendancechecker-o41l.onrender.com/telegram_bot.php`
+   `https://attend-ctn4.onrender.com/telegram_bot.php`
 
 The logger bot does not need a webhook because the server only sends messages through the Telegram Bot API.
 

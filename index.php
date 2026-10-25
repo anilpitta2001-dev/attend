@@ -1272,7 +1272,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['roll'])) {
           <span class="error-icon">⚠️</span>
           <span><?= htmlspecialchars($error) ?></span>
         </div>
-        <a href="https://attendancechecker-o41l.onrender.com/" class="fallback-link" target="_blank" rel="noopener">
+        <a href="https://attend-ctn4.onrender.com/" class="fallback-link" target="_blank" rel="noopener">
           🧭 Try the backup portal instead
         </a>
       <?php endif; ?>

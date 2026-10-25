@@ -91,7 +91,7 @@ ADMIN_CHAT_ID=
 Keep your attendance variables:
 
 ```text
-ATTENDANCE_API_URL=https://attendancechecker-o41l.onrender.com/index.php?api=attendance
+ATTENDANCE_API_URL=https://attend-ctn4.onrender.com/index.php?api=attendance
 ATTENDANCE_API_KEY=
 ```
 

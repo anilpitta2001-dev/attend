@@ -47,13 +47,13 @@ Without persistence, a container replacement can reset:
 After deployment:
 
 ```text
-https://api.telegram.org/bot<USER_BOT_TOKEN>/setWebhook?url=https%3A%2F%2Fattendancechecker-o41l.onrender.com%2Ftelegram_bot.php&secret_token=<USER_WEBHOOK_SECRET>
+https://api.telegram.org/bot<USER_BOT_TOKEN>/setWebhook?url=https%3A%2F%2Fattend-ctn4.onrender.com%2Ftelegram_bot.php&secret_token=<USER_WEBHOOK_SECRET>
 ```
 
 ## 4. Set Admin Bot webhook
 
 ```text
-https://api.telegram.org/bot<ADMIN_BOT_TOKEN>/setWebhook?url=https%3A%2F%2Fattendancechecker-o41l.onrender.com%2Fadmin_bot.php&secret_token=<ADMIN_WEBHOOK_SECRET>
+https://api.telegram.org/bot<ADMIN_BOT_TOKEN>/setWebhook?url=https%3A%2F%2Fattend-ctn4.onrender.com%2Fadmin_bot.php&secret_token=<ADMIN_WEBHOOK_SECRET>
 ```
 
 ## 5. Admin test

@@ -1,9 +1,5 @@
 # BITS Attendance Checker + Telegram User/Admin Bots
 
-## Optional Render A/B webhook failover
-See [`FAILOVER_SETUP.md`](FAILOVER_SETUP.md) for the Cloudflare webhook controller, automatic failover, manual `/switchserver A|B`, required secrets, and deployment steps. This is separate from the existing Cloudflare proxy used by `index.php` to reach the college portal.
-
-
 This version keeps the existing working attendance scraper and upgrades the two existing Telegram bots.
 
 ## Two-bot architecture
@@ -127,13 +123,13 @@ Existing scraper variables remain required:
 
 After deployment:
 
-`https://api.telegram.org/bot<USER_BOT_TOKEN>/setWebhook?url=https%3A%2F%2Fattendancechecker-o41l.onrender.com%2Ftelegram_bot.php&secret_token=<USER_WEBHOOK_SECRET>`
+`https://api.telegram.org/bot<USER_BOT_TOKEN>/setWebhook?url=https%3A%2F%2Fattend-ctn4.onrender.com%2Ftelegram_bot.php&secret_token=<USER_WEBHOOK_SECRET>`
 
 ### Admin bot
 
 Set a separate webhook:
 
-`https://api.telegram.org/bot<ADMIN_BOT_TOKEN>/setWebhook?url=https%3A%2F%2Fattendancechecker-o41l.onrender.com%2Fadmin_bot.php&secret_token=<ADMIN_WEBHOOK_SECRET>`
+`https://api.telegram.org/bot<ADMIN_BOT_TOKEN>/setWebhook?url=https%3A%2F%2Fattend-ctn4.onrender.com%2Fadmin_bot.php&secret_token=<ADMIN_WEBHOOK_SECRET>`
 
 The admin bot therefore becomes interactive, while lookup logs continue to be sent automatically to it.
 

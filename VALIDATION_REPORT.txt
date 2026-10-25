@@ -8,12 +8,3 @@ PASS: telegram_cron.php — No syntax errors detected in /mnt/data/attendance4_i
 PASS: telegram_bot.php — No syntax errors detected in /mnt/data/attendance4_inspect/attendance-4/telegram_bot.php
 
 Scope: static syntax validation only. Live Telegram, college portal, Render proxy, and Supabase integration tests must be run after deployment.
-
-
-Webhook failover additions (2026-10-22):
-- Added failover-worker.js for stable Telegram webhook ingress, Render A/B routing, automatic retry on connection/5xx failure, and private admin server switching.
-- Added FAILOVER_SETUP.md and wrangler.toml.
-- Both PHP webhook endpoints now require BACKEND_PROXY_SECRET and the respective Telegram webhook secret on POST.
-- PHP syntax validation passed for telegram_bot.php, admin_bot.php, db.php, and index.php.
-- Node syntax validation passed for failover-worker.js.
-- Live deployment, Cloudflare KV binding, Telegram webhook registration, and end-to-end failover have NOT been tested from this archive.
