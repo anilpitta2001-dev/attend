@@ -14,7 +14,6 @@ date_default_timezone_set('Asia/Kolkata');
 
 define('BOT_TOKEN', trim(getenv('TELEGRAM_BOT_TOKEN') ?: ''));
 define('WEBHOOK_SECRET', trim(getenv('TELEGRAM_WEBHOOK_SECRET') ?: ''));
-define('BACKEND_PROXY_SECRET', trim(getenv('BACKEND_PROXY_SECRET') ?: ''));
 define('ATTENDANCE_API_KEY', trim(getenv('ATTENDANCE_API_KEY') ?: ''));
 define('ADMIN_CHAT_ID', trim(getenv('ADMIN_CHAT_ID') ?: ''));
 define('ADMIN_BOT_TOKEN', trim(getenv('ADMIN_BOT_TOKEN') ?: ''));
@@ -23,7 +22,7 @@ define('MAINTENANCE_MODE', filter_var(getenv('MAINTENANCE_MODE') ?: 'false', FIL
 define(
     'ATTENDANCE_API_URL',
     getenv('ATTENDANCE_API_URL')
-        ?: 'https://attendancechecker-o41l.onrender.com/index.php?api=attendance'
+        ?: 'https://attend-ctn4.onrender.com/index.php?api=attendance'
 );
 
 function bot_db(): ?PDO { require_once __DIR__ . '/db.php'; return attendance_db(); }
