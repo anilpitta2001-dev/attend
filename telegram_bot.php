@@ -400,65 +400,63 @@ function attendance_text($data) {
     $roll = htmlspecialchars((string)($data['roll'] ?? ''), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $branch = htmlspecialchars((string)($data['branch'] ?? 'Not available'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $attendance_raw = $data['attendance'] ?? null;
-    $attendance = htmlspecialchars((string)($attendance_raw ?? 'Not found'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $last = htmlspecialchars((string)($data['last_date'] ?? 'Not found'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
     $number = is_numeric($attendance_raw) ? (float)$attendance_raw : null;
+    $divider = str_repeat('━', 18);
 
-    // Attendance figure unavailable from the API — keep this branch minimal, same as before.
+    // Attendance figure unavailable from the API.
     if ($number === null) {
         return
-            "📊 <b>BITS Attendance</b>\n\n" .
-            "👤 <b>Name:</b> {$name}\n" .
-            "🎓 <b>Roll:</b> <code>{$roll}</code>\n" .
-            "🏫 <b>Branch:</b> {$branch}\n\n" .
-            "ℹ️ <b>Attendance:</b> Not found\n" .
-            "📅 <b>Last Attended:</b> {$last}\n\n" .
-            "⚠️ Be Safe\n" .
-            "If you check another Roll Number, wait 10 seconds for better efficiency.";
+            "🎓 <b>BITS ATTENDANCE</b>\n\n" .
+            "{$divider}\n\n" .
+            "👤 {$name}\n\n" .
+            "🆔 <code>{$roll}</code> • 🏫 {$branch}\n\n" .
+            "ℹ️ Attendance data is currently unavailable.\n\n" .
+            "📅 Last Attended: {$last}";
     }
 
     $clamped = max(0.0, min(100.0, $number));
+    $attendanceDisplay = (floor($number) == $number)
+        ? (string)(int)$number
+        : rtrim(rtrim(number_format($number, 2), '0'), '.');
 
-    // 10-slot visual progress bar.
+    // 10-block emoji progress bar.
     $filledSlots = (int)round($clamped / 10);
-    $bar = str_repeat('█', $filledSlots) . str_repeat('░', 10 - $filledSlots);
+    $bar = str_repeat('🟩', $filledSlots) . str_repeat('⬜', 10 - $filledSlots);
 
     if ($number < 70) {
         $statusEmoji = '🔴';
         $statusLabel = 'ATTENDANCE SHORTAGE';
-    } elseif ($number < 75) {
-        $statusEmoji = '🟠';
-        $statusLabel = 'ALMOST THERE';
-    } else {
-        $statusEmoji = '🟢';
-        $statusLabel = 'GOOD STANDING';
-    }
-
-    $needLine = '';
-    if ($number < 75) {
         $needed = 75 - $number;
-        // Trim to a clean number: whole % when exact, else 1 decimal place.
         $neededStr = (abs($needed - round($needed)) < 0.005)
             ? (string)(int)round($needed)
             : rtrim(rtrim(number_format($needed, 2), '0'), '.');
-        $needLine = "📈 Need {$neededStr}% more to reach 75%.\n\n";
+        $statusLine = "Need {$neededStr}% more to reach 75%.";
+    } elseif ($number < 75) {
+        $statusEmoji = '🟠';
+        $statusLabel = 'ALMOST THERE';
+        $needed = 75 - $number;
+        $neededStr = (abs($needed - round($needed)) < 0.005)
+            ? (string)(int)round($needed)
+            : rtrim(rtrim(number_format($needed, 2), '0'), '.');
+        $statusLine = "Just {$neededStr}% more to reach 75%.";
+    } else {
+        $statusEmoji = '🟢';
+        $statusLabel = 'GOOD STANDING';
+        $statusLine = 'Your attendance is on track.';
     }
 
-    $attendanceDisplay = (floor($number) == $number) ? (string)(int)$number : rtrim(rtrim(number_format($number, 2), '0'), '.');
-
     return
-        "📊 <b>BITS Attendance</b>\n\n" .
-        "👤 <b>Name:</b> {$name}\n" .
-        "🎓 <b>Roll:</b> <code>{$roll}</code>\n" .
-        "🏫 <b>Branch:</b> {$branch}\n\n" .
-        "{$statusEmoji} <b>{$statusLabel}</b>\n" .
-        "📊 <b>Attendance:</b> {$attendanceDisplay}%\n" .
-        "[{$bar}] {$attendanceDisplay}%\n\n" .
-        "{$needLine}" .
-        "📅 <b>Last Attended:</b> {$last}\n\n" .
-        "⚠️ Be Safe\n" .
-        "If you check another Roll Number, wait 10 seconds for better efficiency.";
+        "🎓 <b>BITS ATTENDANCE</b>\n\n" .
+        "{$divider}\n\n" .
+        "👤 {$name}\n\n" .
+        "🆔 <code>{$roll}</code> • 🏫 {$branch}\n\n" .
+        "📊 OVERALL: {$attendanceDisplay}%\n\n" .
+        "{$bar}\n\n" .
+        "{$statusEmoji} <b>{$statusLabel}</b>\n\n" .
+        "{$statusLine}\n\n" .
+        "📅 Last Attended: {$last}";
 }
 
 function report_keyboard($roll) {
